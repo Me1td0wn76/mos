@@ -1,0 +1,29 @@
+#Docker Compose MariaDB created file
+# Service name
+
+services:
+  db:
+    image: mariadb:latest
+    container_name: mos_mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: mospass123
+      MARIADB_DATABASE: mosdb
+      MARIADB_USER: mosuser
+      MARIADB_PASSWORD: mospass123
+      TZ: Asia/Tokyo
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database_init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:
+    driver: local
