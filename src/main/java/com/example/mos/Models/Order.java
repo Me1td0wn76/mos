@@ -28,10 +28,6 @@ public class Order {
     @JoinColumn(name = "table_id", nullable = false)
     private TableInfo table;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-    
     @Enumerated(EnumType.STRING)
     @Column(name = "plan_type", nullable = false)
     private PlanType planType;

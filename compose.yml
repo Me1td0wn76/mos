@@ -1,7 +1,8 @@
-#Docker Compose MariaDB created file
-# Service name
+# Docker Compose for MOS (Mobile Order System)
+# Services: Database, Backend API, Customer Frontend, Staff Frontend
 
 services:
+  # MariaDB Database
   db:
     image: mariadb:latest
     container_name: mos_mariadb
@@ -23,7 +24,61 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - mos-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mos_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/mosdb?useSSL=false&serverTimezone=Asia/Tokyo&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: mosuser
+      SPRING_DATASOURCE_PASSWORD: mospass123
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mos-network
+
+  # Customer Frontend (Mobile App)
+  customer-frontend:
+    build:
+      context: ../mos_mobile_system
+      dockerfile: Dockerfile
+    container_name: mos_customer_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - mos-network
+
+  # Staff Frontend (Management App)
+  staff-frontend:
+    build:
+      context: ../mos_staff_system
+      dockerfile: Dockerfile
+    container_name: mos_staff_frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - mos-network
 
 volumes:
   db_data:
     driver: local
+
+networks:
+  mos-network:
+    driver: bridge

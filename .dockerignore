@@ -1,0 +1,14 @@
+target/
+!target/*.war
+*.class
+*.log
+*.jar
+.mvn/
+mvnw
+mvnw.cmd
+.git
+.gitignore
+README.md
+HELP.md
+TEST_README.md
+CODEOWNERS
