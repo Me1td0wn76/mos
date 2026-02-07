@@ -190,11 +190,11 @@ mvn clean test jacoco:report
 ## 開発メモ
 
 ### TODO
-- [ ] パスワードのハッシュ化実装（BCryptPasswordEncoder）
+- [x] パスワードのハッシュ化実装（BCryptPasswordEncoder）
 - [ ] 会計連携（POS API）実装
 - [ ] データエクスポート機能（CSV）
 - [ ] 画像アップロード機能
-- [ ] WebSocket実装（リアルタイム通知）
+- [x] WebSocket実装（リアルタイム通知）
 
 ### 注意事項
 - 現在、パスワードは平文で保存されています。本番環境では必ずハッシュ化してください。
