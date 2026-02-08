@@ -123,18 +123,16 @@ CREATE TABLE IF NOT EXISTS order_details (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 10. 呼び出しテーブル
-CREATE TABLE IF NOT EXISTS calls (
+CREATE TABLE IF NOT EXISTS call_requests (
     call_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     table_id BIGINT NOT NULL,
     call_type_id BIGINT NOT NULL,
     remarks VARCHAR(500),
     status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
-    responded_by BIGINT,
-    responded_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (table_id) REFERENCES tables(table_id),
-    FOREIGN KEY (call_type_id) REFERENCES call_types(call_type_id),
-    FOREIGN KEY (responded_by) REFERENCES employees(employee_id)
+    FOREIGN KEY (call_type_id) REFERENCES call_types(call_type_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ===================================

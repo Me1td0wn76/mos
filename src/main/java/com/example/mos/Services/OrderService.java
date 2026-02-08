@@ -29,15 +29,22 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderDetailOptionRepository orderDetailOptionRepository;
     private final TableInfoRepository tableInfoRepository;
+    private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
     private final SimpMessagingTemplate messagingTemplate;
     
     @Transactional
     public OrderResponse createOrder(OrderCreateRequest request) {
-        // QRコードからテーブル情報を取得
-        TableInfo table = tableInfoRepository.findByQrCode(request.getQrCode())
-                .orElseThrow(() -> new ResourceNotFoundException("Table not found for QR code"));
+        // テーブル情報を取得（テーブル番号とストアIDから検索）
+        String tableNumber = request.getTableNumber() != null ? request.getTableNumber() : request.getQrCode();
+        Long storeId = request.getStoreId() != null ? request.getStoreId() : 1L; // デフォルトストアID
+        
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Store not found: " + storeId));
+        
+        TableInfo table = tableInfoRepository.findByStoreAndTableNumber(store, tableNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Table not found: " + tableNumber));
         
         // 注文作成
         Order order = new Order();
