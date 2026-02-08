@@ -19,6 +19,9 @@ WORKDIR /app
 # Copy built jar from build stage
 COPY --from=build /app/target/*.war app.war
 
+# Create uploads directory
+RUN mkdir -p /uploads/products
+
 # Expose port
 EXPOSE 8080
 

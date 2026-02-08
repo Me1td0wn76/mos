@@ -70,6 +70,19 @@ CREATE TABLE IF NOT EXISTS product_categories (
     FOREIGN KEY (category_id) REFERENCES categories(category_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 5-1. 商品オプションテーブル
+CREATE TABLE IF NOT EXISTS product_options (
+    option_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    option_name VARCHAR(100) NOT NULL,
+    option_value VARCHAR(100) NOT NULL,
+    additional_price DECIMAL(10, 2) DEFAULT 0.00,
+    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 6. テーブルテーブル（座席）
 CREATE TABLE IF NOT EXISTS tables (
     table_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -120,6 +133,16 @@ CREATE TABLE IF NOT EXISTS order_details (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 9-1. 注文詳細オプションテーブル
+CREATE TABLE IF NOT EXISTS order_detail_options (
+    order_detail_option_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_detail_id BIGINT NOT NULL,
+    option_id BIGINT NOT NULL,
+    additional_price DECIMAL(10, 2) DEFAULT 0.00,
+    FOREIGN KEY (order_detail_id) REFERENCES order_details(order_detail_id),
+    FOREIGN KEY (option_id) REFERENCES product_options(option_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 10. 呼び出しテーブル

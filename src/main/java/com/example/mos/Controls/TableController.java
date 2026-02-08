@@ -45,6 +45,14 @@ public class TableController {
         return ResponseEntity.ok(ApiResponse.success("Table status updated", table));
     }
     
+    @GetMapping("/verify")
+    public ResponseEntity<ApiResponse<TableInfo>> verifyTableNumber(
+            @RequestParam Long storeId,
+            @RequestParam String tableNumber) {
+        TableInfo table = tableService.verifyTableNumber(storeId, tableNumber);
+        return ResponseEntity.ok(ApiResponse.success("Table found", table));
+    }
+    
     @PostMapping("/qr-codes")
     public ResponseEntity<ApiResponse<List<String>>> generateQRCodes(@RequestBody QRCodeRequest request) 
             throws WriterException, IOException {

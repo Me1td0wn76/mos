@@ -40,6 +40,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/mosdb?useSSL=false&serverTimezone=Asia/Tokyo&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: mosuser
       SPRING_DATASOURCE_PASSWORD: mospass123
+    volumes:
+      - uploads_data:/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -77,6 +79,8 @@ services:
 
 volumes:
   db_data:
+    driver: local
+  uploads_data:
     driver: local
 
 networks:

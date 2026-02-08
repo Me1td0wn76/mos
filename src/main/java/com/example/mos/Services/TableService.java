@@ -86,4 +86,12 @@ public class TableService {
         
         return qrCodes;
     }
+    
+    @Transactional(readOnly = true)
+    public TableInfo verifyTableNumber(Long storeId, String tableNumber) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Store not found"));
+        return tableInfoRepository.findByStoreAndTableNumber(store, tableNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("テーブル番号「" + tableNumber + "」は存在しません"));
+    }
 }
