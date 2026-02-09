@@ -44,6 +44,9 @@ class OrderServiceTest {
     private TableInfoRepository tableInfoRepository;
 
     @Mock
+    private StoreRepository storeRepository;
+
+    @Mock
     private ProductRepository productRepository;
 
     @Mock
@@ -106,7 +109,9 @@ class OrderServiceTest {
         
         testOrder.setTable(testTable);
 
-        when(tableInfoRepository.findByQrCode("MOS:STORE:1:TABLE:1"))
+        when(storeRepository.findById(1L))
+                .thenReturn(Optional.of(testTable.getStore()));
+        when(tableInfoRepository.findByStoreAndTableNumber(any(Store.class), eq("MOS:STORE:1:TABLE:1")))
                 .thenReturn(Optional.of(testTable));
         when(productRepository.findById(1L))
                 .thenReturn(Optional.of(testProduct));
@@ -142,7 +147,9 @@ class OrderServiceTest {
         request.setPlanType("NORMAL");
         request.setItems(new ArrayList<>());
 
-        when(tableInfoRepository.findByQrCode("INVALID_QR"))
+        when(storeRepository.findById(1L))
+                .thenReturn(Optional.of(testTable.getStore()));
+        when(tableInfoRepository.findByStoreAndTableNumber(any(Store.class), eq("INVALID_QR")))
                 .thenReturn(Optional.empty());
 
         // Act & Assert
@@ -169,7 +176,9 @@ class OrderServiceTest {
         items.add(itemRequest);
         request.setItems(items);
 
-        when(tableInfoRepository.findByQrCode("MOS:STORE:1:TABLE:1"))
+        when(storeRepository.findById(1L))
+                .thenReturn(Optional.of(testTable.getStore()));
+        when(tableInfoRepository.findByStoreAndTableNumber(any(Store.class), eq("MOS:STORE:1:TABLE:1")))
                 .thenReturn(Optional.of(testTable));
         when(productRepository.findById(1L))
                 .thenReturn(Optional.of(testProduct));
